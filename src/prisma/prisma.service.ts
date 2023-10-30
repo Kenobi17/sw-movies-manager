@@ -1,14 +1,19 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-  constructor() {
+  constructor(
+    private configService: ConfigService
+  ) {
+    const url = configService.get<string>("DATABASE_URL")
+
     super({
       datasources: {
         db:
         {
-          url: 'postgresql://postgres:password@localhost:5432/sw-movies-manager?schema=public'
+          url
         }
       }
     })

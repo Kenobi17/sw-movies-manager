@@ -4,13 +4,15 @@ import { Tokens } from './types/tokens.type';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from 'src/users/users.service';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private userService: UsersService
+    private userService: UsersService,
+    private configService: ConfigService
   ) { }
 
   async register(data: RegisterDto): Promise<Tokens> {
@@ -76,7 +78,7 @@ export class AuthService {
         email
       },
         {
-          secret: 'access-secret',
+          secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
           expiresIn: 60 * 15,
         }
       ),
@@ -86,7 +88,7 @@ export class AuthService {
         email
       },
         {
-          secret: 'refresh-secret',
+          secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
           expiresIn: 60 * 60 * 24 * 7,
         }
       )
