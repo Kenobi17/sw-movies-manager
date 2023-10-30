@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  STANDARD
+  ADMIN
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -17,8 +22,7 @@ model User {
   hashedRT  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@map("users")
+  role      UserRole @default(STANDARD)
 }
 
 model Movie {

@@ -1,13 +1,20 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, Injectable, OnModuleInit } from '@nestjs/common';
 import { RegisterDto } from 'src/auth/dto/register.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt'
+import { UserRole } from 'src/common/types/role.enum';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
   constructor(
     private prisma: PrismaService,
+    private configService: ConfigService
   ) { }
+
+  onModuleInit() {
+    this.initAdminUser()
+  }
 
   async findByEmail(email: string) {
     return await this.prisma.user.findUnique({ where: { email } })
@@ -59,6 +66,22 @@ export class UsersService {
       },
       data: {
         hashedRT: null
+      }
+    })
+  }
+
+  async initAdminUser() {
+    const email = this.configService.get<string>('ADMIN_EMAIL')
+    const password = this.configService.get<string>('ADMIN_PASSWORD')
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await this.prisma.user.upsert({
+      where: { email },
+      update: {},
+      create: {
+        email,
+        password: hashedPassword,
+        role: UserRole.ADMIN,
       }
     })
   }
