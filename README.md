@@ -1,14 +1,14 @@
-# **SW Movies & Auth API**
+# **SW Movies Manager API**
 
 ## **Table of Contents**
 
 1. [Introduction](#1-introduction)
 2. [System Architecture](#2-system-architecture)
-3. [API Development](#3-api-development)
+3. [API Structure](#3-api-structure)
     1. [Movies Module](#31-movies-module)
     2. [Authentication Module](#32-authentication-module)
-    3. [User Management](#33-user-management)
-4. [Databases](#4-databases)
+    3. [User Module](#33-user-module)
+4. [Database](#4-database)
     1. [Prisma & PostgreSQL](#41-prisma--postgresql)
 5. [Usage](#5-usage)
 6. [Future Enhancements](#6-future-enhancements)
@@ -62,7 +62,7 @@ In summary, this architecture represents a well-orchestrated system where each c
 
 ---
 
-## **3. API Modules**
+## **3. API Structure**
 
 ### **3.1. Movies Module**
 
@@ -80,9 +80,9 @@ It employs guards and roles to ensure only authorized access to specific endpoin
 
 This module is vital for registering, logging in, and logging out users. Furthermore, it facilitates token refreshing. The use of tokens ensures a secure and stateless authentication mechanism. 
 
-### **3.3. User Management**
+### **3.3. User Module**
 
-This service is responsible for user management. Functions include:
+This module is responsible for user management. Functions include:
 
 - Finding users by email or ID
 - Creating new users
