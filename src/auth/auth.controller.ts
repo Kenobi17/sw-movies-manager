@@ -24,7 +24,6 @@ export class AuthController {
       message: 'User register successfuly',
       body: tokens
     }
-
   }
 
   @Post('/login')

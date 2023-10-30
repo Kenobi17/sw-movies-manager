@@ -20,3 +20,23 @@ model User {
 
   @@map("users")
 }
+
+model Movie {
+  id           Int      @id @default(autoincrement())
+  title        String
+  episodeId    Int      @unique
+  openingCrawl String
+  director     String
+  producer     String
+  releaseDate  DateTime
+  created      DateTime @default(now())
+  edited       DateTime @default(now())
+  url          String   
+  
+  characters  String[]
+  planets     String[]
+  starships   String[]
+  vehicles    String[]
+  species     String[]
+}
+
