@@ -5,13 +5,15 @@ import { Response } from 'src/common/types/response.type';
 import { Movie } from '@prisma/client';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { Roles } from 'src/common/decorators/role.decorator';
+import { UserRole } from 'src/common/types/role.enum';
+import { RolesGuard } from 'src/common/guards/role.guard';
 
 @Controller('movies')
 export class MoviesController {
 
   constructor(private readonly moviesService: MoviesService) { }
 
-  @UseGuards(AccessTokenGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   async getMovies(): Promise<Response<Movie[]>> {
@@ -27,6 +29,8 @@ export class MoviesController {
   }
 
 
+  @Roles(UserRole.STANDARD)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   async getMovieById(@Param('id') id: string): Promise<Response<Movie>> {
@@ -41,6 +45,8 @@ export class MoviesController {
     }
   }
 
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createNewMovie(@Body() data: CreateMovieDto): Promise<Response<Movie>> {
@@ -53,6 +59,8 @@ export class MoviesController {
     }
   }
 
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
   async updateMovie(@Param('id') id: string, @Body() data: UpdateMovieDto): Promise<Response<Movie>> {
@@ -65,6 +73,8 @@ export class MoviesController {
     }
   }
 
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.OK)
   async deleteMovie(@Param('id') id: string): Promise<Response<null>> {

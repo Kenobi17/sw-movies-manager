@@ -19,9 +19,9 @@ export class AuthService {
     try {
       const newUser = await this.userService.createUser(data)
 
-      const { id, email } = newUser
+      const { id, email, role } = newUser
 
-      const tokens = await this.getTokens(id, email)
+      const tokens = await this.getTokens(id, email, role)
 
       await this.userService.updateRefreshToken(id, tokens.refresh_token)
 
@@ -39,9 +39,9 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(data.password, user.password)
     if (!passwordMatches) throw new ForbiddenException("Access Denied")
 
-    const { id, email } = user
+    const { id, email, role } = user
 
-    const tokens = await this.getTokens(id, email)
+    const tokens = await this.getTokens(id, email, role)
     await this.userService.updateRefreshToken(id, tokens.refresh_token)
 
     return tokens
@@ -63,19 +63,20 @@ export class AuthService {
     const rtMatches = bcrypt.compare(refreshToken, user.hashedRT)
     if (!rtMatches) throw new ForbiddenException("Access Denied")
 
-    const { id, email } = user
+    const { id, email, role } = user
 
-    const tokens = await this.getTokens(id, email)
+    const tokens = await this.getTokens(id, email, role)
     await this.userService.updateRefreshToken(id, tokens.refresh_token)
 
     return tokens
   }
 
-  async getTokens(userId: number, email: string): Promise<Tokens> {
+  async getTokens(userId: number, email: string, role: string): Promise<Tokens> {
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync({
         sub: userId,
-        email
+        email,
+        role
       },
         {
           secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
@@ -85,7 +86,8 @@ export class AuthService {
 
       this.jwtService.signAsync({
         sub: userId,
-        email
+        email,
+        role
       },
         {
           secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
