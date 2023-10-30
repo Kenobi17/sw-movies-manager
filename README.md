@@ -129,16 +129,48 @@ Prisma serves as an open-source database toolkit, providing an Object-Relational
 
 ## **5. Usage**
 
-- Incorporating more detailed logging and analytics.
-- Adding unit tests for each module
-- Implement OpenAPI Swagger for the API documentation
+1. Clone the repo
+
+  ```bash
+  git clone git@github.com:Kenobi17/sw-movies-manager.git
+  ```
+
+2. Install the dependencies 
+
+  ```bash
+  cd sw-movies-manager
+  yarn install
+  ```
+
+3. Set up .env file
+
+  ```bash
+  cp .env.example .env
+  ```
+
+4. Set up local database using docker-compose
+
+  ```bash
+  docker-compose up
+  ```
+
+5. Run migrations with prisma
+
+  ```bash
+  npx prisma migrate dev
+  ```
+
+6. Set up the API
+
+  ```bash
+  yarn start
+  ```
 
 ## **6. Future Enhancements**
 
-Post successful deployment and operation, there are plans to expand the project's functionalities. Potential features include:
-
 - Incorporating more detailed logging and analytics.
 - Adding unit tests for each module
 - Implement OpenAPI Swagger for the API documentation
+- Deploy a live demo of the API using Railways App
 
 
